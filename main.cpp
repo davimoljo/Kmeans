@@ -1,49 +1,100 @@
 #include <iostream>
+#include <iomanip>
 #include <random>
 #include <cmath>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
-#define N 6
-#define M 2
+#define DIMENSION 4
+#define FILE_NAME "C:/Users/ryalv/Kmeans cpp/iris.txt"
 
-struct point
+struct Point
 {
-    float vector[4];
+    double dimensions[DIMENSION];
+};
+
+struct Cluster
+{
+    Point centroid;
 };
 
 
-void read_file()
+int count_lines()
 {
-    char line[200];
-    ifstream data_file("C:/Users/ryalv/Kmeans cpp/irisdata.txt");
+    string line;
+    ifstream data_file(FILE_NAME);
+    int cont = 0;
+
+    while(getline(data_file, line))
+    {
+        cont++;
+    }
+
+    return cont;
+}
+
+Point process_line(string line)
+{
+    Point coords;
+    int index = 0;
+    string coord;
+    char c = ' ';
+
+    for (size_t i = 0; i < line.size(); ++i) { // Mais correto usar size_t 
+
+        c = line[i];
+
+        if (c == ',') 
+        {
+            try 
+            {
+                coords.dimensions[index] = stod(coord);
+                index++;
+            } 
+            catch (...) 
+            {
+                break;  
+            }
+
+            coord = "";  
+        } 
+
+        else 
+        {
+            coord += c;  
+        }
+    }
+
+    return coords;
+}
+
+void read_file(Point point_data[])
+{
+    string line;
+    ifstream data_file(FILE_NAME);
 
     if(!data_file.is_open())
     {
-        cout << "Error";
+        cout << "Couldn't find the file";
         return;
     }
-    
-    while(data_file.getline(line, 200))
+
+    int index = 0;
+
+    while(getline(data_file, line))
     {
-        cout << line << endl;
+        point_data[index] = process_line(line);
+        index++;
     }
     
     data_file.close();
 }
 
-void k_means(double x[][M], int k)
-{
-    for(int i = 0; i < k; i++)
-    {
-
-    }    
-}
-
 int main()
 {
-    int k, max_iter = 100;
+    int lines, k, max_iter = 100;
 
     cout << "How many groups would you like ?: ";
     cin >> k;
@@ -51,8 +102,23 @@ int main()
     cin >> max_iter;
     cout << endl;
     
-    read_file();
+    for(int i = 0; i < k; i++)
+    {
+    }
 
+    lines = count_lines();
+
+    Point point_data[lines];
+
+    read_file(point_data);
+
+    for(int j = 0; j < lines; j++)
+    {
+        cout << fixed << setprecision(1) << point_data[j].dimensions[0] << " ";
+        cout << fixed << setprecision(1) << point_data[j].dimensions[1] << " ";
+        cout << fixed << setprecision(1) << point_data[j].dimensions[2] << " ";
+        cout << fixed << setprecision(1) << point_data[j].dimensions[3] << endl;
+    }
+    
     return 0;
-
 }
