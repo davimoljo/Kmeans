@@ -54,10 +54,12 @@ double points_distance(Point centroid, Point a)
 void linking_point_clusters(int closer_cluster[], Point cluster_data[], Point point_data[], int k, int points)
 {
     int index = 0;
-    for(int i=0; i < points; i++)
+
+    for(int i = 0; i < points; i++)
     {
-        double menor= points_distance(cluster_data[0], point_data[i]);
-        for(int j=0; j < k; j++)
+        double menor = points_distance(cluster_data[0], point_data[i]);
+      
+        for(int j = 0; j < k; j++)
         {
             if(points_distance(cluster_data[j], point_data[i]) < menor)
             {
@@ -68,6 +70,43 @@ void linking_point_clusters(int closer_cluster[], Point cluster_data[], Point po
         }
         closer_cluster[i] = index;
     }
+
+}
+void recalculating_cluster(int closer_cluster[], Point point_data[], Point cluster_data[], int k, int points)
+{
+    int cont = 0;
+    double sum[DIMENSION] = {0};
+
+    for(int i = 0; i < k; i++)
+    {
+        for(int j = 0; j < points; j++)
+        {
+            if(closer_cluster[j] == i)
+            {
+                for(int l = 0; l < DIMENSION; l++)
+                {
+                    sum[l] += point_data[j].dimensions[l];
+                }
+                cont++;
+            }
+        }
+        for(int l = 0; l < DIMENSION; l++)
+        {
+            cluster_data[i].dimensions[l] = sum[l] / cont;
+            sum[l] = 0;
+        }
+    }
+}
+
+void kmeans(int closer_cluster[], Point cluster_data[], Point point_data[], int k, int points, int max_iter)
+{
+
+    for(int i = 0; i < max_iter; i++)
+    {
+        recalculating_cluster(closer_cluster, point_data, cluster_data, k, points);
+        linking_point_clusters(closer_cluster, cluster_data, point_data, k, points);
+    }
+
 }
 
 int count_lines()
@@ -155,30 +194,20 @@ int main()
 
     create_clusters(cluster_data, k);
 
-    // for(int j = 0; j < k; j++)
-    // {
-    //     for(int i = 0; i < DIMENSION; i++)
-    //     {
-    //         cout << cluster_data[j].dimensions[i] << " ";
-    //     }
-    //     cout << endl;
-    // }
-
     lines = count_lines();
 
     Point point_data[lines];
 
     read_file(point_data);
 
-    // for(int j = 0; j < lines; j++)
-    // {
-    //     cout << fixed << setprecision(1) << point_data[j].dimensions[0] << " ";
-    //     cout << fixed << setprecision(1) << point_data[j].dimensions[1] << " ";
-    //     cout << fixed << setprecision(1) << point_data[j].dimensions[2] << " ";
-    //     cout << fixed << setprecision(1) << point_data[j].dimensions[3] << endl;
-    // }
-
     int closer_cluster[lines];
 
+    linking_point_clusters(closer_cluster, cluster_data, point_data, k, lines);
+    kmeans(closer_cluster, cluster_data, point_data, k, lines, max_iter);
+    
+    for(int i=0; i<lines; i++)
+    {
+        cout << "The point "<< i + 1 << " is linked to the  " << closer_cluster[i] << " cluster. " << endl;
+    }         
     return 0;
 }
