@@ -54,9 +54,11 @@ double points_distance(Point centroid, Point a)
 void linking_point_clusters(int closer_cluster[], Point cluster_data[], Point point_data[], int k, int points)
 {
     int index = 0;
+
     for(int i = 0; i < points; i++)
     {
         double menor = points_distance(cluster_data[0], point_data[i]);
+      
         for(int j = 0; j < k; j++)
         {
             if(points_distance(cluster_data[j], point_data[i]) < menor)
@@ -68,6 +70,7 @@ void linking_point_clusters(int closer_cluster[], Point cluster_data[], Point po
         }
         closer_cluster[i] = index;
     }
+
 }
 void recalculating_cluster(int closer_cluster[], Point point_data[], Point cluster_data[], int k, int points)
 {
@@ -103,6 +106,7 @@ void kmeans(int closer_cluster[], Point cluster_data[], Point point_data[], int 
         recalculating_cluster(closer_cluster, point_data, cluster_data, k, points);
         linking_point_clusters(closer_cluster, cluster_data, point_data, k, points);
     }
+
 }
 
 int count_lines()
