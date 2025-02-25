@@ -15,11 +15,46 @@ struct Point
     double dimensions[DIMENSION];
 };
 
-struct Cluster
+/*struct Cluster
 {
     Point centroid;
 };
+*/
 
+void create_clusters(Point cluster_data[], int k)
+{
+    Point centroid;
+
+    random_device number;  
+    mt19937 gen(number()); 
+
+    for(int i = 0; i < k; i++)
+    {
+        for(int j = 0; j < DIMENSION; j++)
+        {
+            uniform_real_distribution<double> distrib(0.0, 10.0);
+            centroid.dimensions[j] = distrib(gen);
+        }
+        cluster_data[i] = centroid;
+    }
+}
+
+double points_distance(Point centroid, Point a)
+{
+    double sum = 0;
+
+    for(int i = 0; i < DIMENSION; i++)
+    {
+        sum += pow(centroid.dimensions[i] - a.dimensions[i], 2);
+    }
+
+    return sqrt(sum);
+}
+
+void recalculate_clusters(Point cluster_data[], Point point_data[], int k, int points)
+{
+    
+}
 
 int count_lines()
 {
@@ -102,9 +137,18 @@ int main()
     cin >> max_iter;
     cout << endl;
     
-    for(int i = 0; i < k; i++)
-    {
-    }
+    Point cluster_data[k];
+
+    create_clusters(cluster_data, k);
+
+    // for(int j = 0; j < k; j++)
+    // {
+    //     for(int i = 0; i < DIMENSION; i++)
+    //     {
+    //         cout << cluster_data[j].dimensions[i] << " ";
+    //     }
+    //     cout << endl;
+    // }
 
     lines = count_lines();
 
@@ -112,13 +156,15 @@ int main()
 
     read_file(point_data);
 
-    for(int j = 0; j < lines; j++)
-    {
-        cout << fixed << setprecision(1) << point_data[j].dimensions[0] << " ";
-        cout << fixed << setprecision(1) << point_data[j].dimensions[1] << " ";
-        cout << fixed << setprecision(1) << point_data[j].dimensions[2] << " ";
-        cout << fixed << setprecision(1) << point_data[j].dimensions[3] << endl;
-    }
-    
+    // for(int j = 0; j < lines; j++)
+    // {
+    //     cout << fixed << setprecision(1) << point_data[j].dimensions[0] << " ";
+    //     cout << fixed << setprecision(1) << point_data[j].dimensions[1] << " ";
+    //     cout << fixed << setprecision(1) << point_data[j].dimensions[2] << " ";
+    //     cout << fixed << setprecision(1) << point_data[j].dimensions[3] << endl;
+    // }
+
+    cout << points_distance(point_data[2], point_data[3]);
+
     return 0;
 }
