@@ -61,6 +61,7 @@ void linking_point_clusters(int closer_cluster[], Point cluster_data[], Point po
         }
         closer_cluster[i] = index;
     }
+
 }
 
 // Recalcula os centróides dos clusters com base nos pontos atribuídos
@@ -99,6 +100,7 @@ void kmeans(int closer_cluster[], Point cluster_data[], Point point_data[], int 
         recalculating_cluster(closer_cluster, point_data, cluster_data, k, points);
         linking_point_clusters(closer_cluster, cluster_data, point_data, k, points);
     }
+
 }
 
 // Conta o número de linhas no arquivo (número de pontos)
@@ -159,14 +161,16 @@ void read_file(Point point_data[])
 {
     string line;
     ifstream data_file(FILE_NAME);
-    if (!data_file.is_open()) {
+    if (!data_file.is_open()) 
+    {
         cout << "Couldn't find the file";
         return;
     }
 
     int index = 0;
 
-    while (getline(data_file, line)) {
+    while (getline(data_file, line)) 
+    {
         point_data[index] = process_line(line);
         index++;
     }
