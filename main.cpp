@@ -15,12 +15,6 @@ struct Point
     double dimensions[DIMENSION];
 };
 
-/*struct Cluster
-{
-    Point centroid;
-};
-*/
-
 void create_clusters(Point cluster_data[], int k)
 {
     Point centroid;
@@ -39,6 +33,25 @@ void create_clusters(Point cluster_data[], int k)
     }
 }
 
+void linking_point_clusters(int closer_cluster[], Point cluster_data[], Point point_data[], int k, int points)
+{
+    int index = 0;
+    for(int i=0; i < points; i++)
+    {
+        double menor= points_distance(cluster_data[0], point_data[i]);
+        for(int j=0; j < k; j++)
+        {
+            if(points_distance(cluster_data[j], point_data[i]) < menor)
+            {
+                menor = points_distance(cluster_data[j], point_data[i]);
+                index = j;
+            }
+
+        }
+        closer_cluster[i] = index;
+    }
+}
+
 double points_distance(Point centroid, Point a)
 {
     double sum = 0;
@@ -51,10 +64,6 @@ double points_distance(Point centroid, Point a)
     return sqrt(sum);
 }
 
-void recalculate_clusters(Point cluster_data[], Point point_data[], int k, int points)
-{
-    
-}
 
 int count_lines()
 {
@@ -166,5 +175,7 @@ int main()
 
     cout << points_distance(point_data[2], point_data[3]);
 
+    // int closer_cluster[lines];
+    
     return 0;
 }
