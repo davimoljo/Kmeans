@@ -15,6 +15,81 @@ struct Point
     double dimensions[DIMENSION];
 };
 
+// Conta o número de linhas no arquivo (número de pontos)
+int count_lines() 
+{
+    string line;
+    ifstream data_file(FILE_NAME);
+    int cont = 0;
+    while (getline(data_file, line))
+        cont++;
+    return cont;
+}
+
+// Processa uma linha do arquivo para extrair os valores e formar um ponto
+Point process_line(string line) 
+{
+    Point coords;
+    int index = 0;
+    string coord;
+
+    for (size_t i = 0; i < line.size(); ++i) {
+        char c = line[i];
+        if (c == ',') 
+        {
+            try 
+            {
+                coords.dimensions[index] = stod(coord);
+                index++;
+            } 
+            catch (...) 
+            {
+                break;
+            }
+            coord = "";
+        } 
+        else 
+        {
+            coord += c;
+        }
+    }
+    // Processa o último valor, se houver
+    if (!coord.empty() && index < DIMENSION) 
+    {
+        try 
+        {
+            coords.dimensions[index] = stod(coord);
+        } 
+        catch (...)
+        {
+            // Ignora erros de conversão
+        }
+    }
+    return coords;
+}
+
+// Lê os pontos do arquivo e os armazena em point_data
+void read_file(Point point_data[]) 
+{
+    string line;
+    ifstream data_file(FILE_NAME);
+    if (!data_file.is_open()) 
+    {
+        cout << "Couldn't find the file";
+        return;
+    }
+
+    int index = 0;
+
+    while (getline(data_file, line)) 
+    {
+        point_data[index] = process_line(line);
+        index++;
+    }
+
+    data_file.close();
+}
+
 // Inicializa os clusters escolhendo valores aleatórios dos pontos existentes
 void create_clusters(Point cluster_data[], Point points_data[], int k, int points) 
 {
@@ -103,80 +178,6 @@ void kmeans(int closer_cluster[], Point cluster_data[], Point point_data[], int 
 
 }
 
-// Conta o número de linhas no arquivo (número de pontos)
-int count_lines() 
-{
-    string line;
-    ifstream data_file(FILE_NAME);
-    int cont = 0;
-    while (getline(data_file, line))
-        cont++;
-    return cont;
-}
-
-// Processa uma linha do arquivo para extrair os valores e formar um ponto
-Point process_line(string line) 
-{
-    Point coords;
-    int index = 0;
-    string coord;
-
-    for (size_t i = 0; i < line.size(); ++i) {
-        char c = line[i];
-        if (c == ',') 
-        {
-            try 
-            {
-                coords.dimensions[index] = stod(coord);
-                index++;
-            } 
-            catch (...) 
-            {
-                break;
-            }
-            coord = "";
-        } 
-        else 
-        {
-            coord += c;
-        }
-    }
-    // Processa o último valor, se houver
-    if (!coord.empty() && index < DIMENSION) 
-    {
-        try 
-        {
-            coords.dimensions[index] = stod(coord);
-        } 
-        catch (...)
-        {
-            // Ignora erros de conversão
-        }
-    }
-    return coords;
-}
-
-// Lê os pontos do arquivo e os armazena em point_data
-void read_file(Point point_data[]) 
-{
-    string line;
-    ifstream data_file(FILE_NAME);
-    if (!data_file.is_open()) 
-    {
-        cout << "Couldn't find the file";
-        return;
-    }
-
-    int index = 0;
-
-    while (getline(data_file, line)) 
-    {
-        point_data[index] = process_line(line);
-        index++;
-    }
-
-    data_file.close();
-}
 
 int main() 
 {
