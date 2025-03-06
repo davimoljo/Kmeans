@@ -53,18 +53,7 @@ Point process_line(string line)
             coord += c;
         }
     }
-    // Processa o último valor, se houver
-    if (!coord.empty() && index < DIMENSION) 
-    {
-        try 
-        {
-            coords.dimensions[index] = stod(coord);
-        } 
-        catch (...)
-        {
-            // Ignora erros de conversão
-        }
-    }
+    
     return coords;
 }
 
