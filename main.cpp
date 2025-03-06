@@ -8,7 +8,7 @@
 using namespace std;
 
 #define DIMENSION 4
-#define FILE_NAME "C:/Users/ryalv/Kmeans cpp/iris.txt"
+#define FILE_NAME "iris.txt"
 
 struct Point
 {
@@ -178,6 +178,34 @@ void kmeans(int closer_cluster[], Point cluster_data[], Point point_data[], int 
 
 }
 
+// Função que exibe os resultados encontrados pelo algoritmo
+void show_results(int closer_cluster[], int points, int k)
+{
+
+    // Qual ponto pertence a qual cluster
+    for (int i = 0; i < points; i++) 
+    {
+        cout << "The point " << i + 1 << " is linked to cluster " << closer_cluster[i] + 1 << "." << endl;
+    }
+
+    cout << endl;
+
+    cout << "Cluster-Point percentage: " << endl << endl;
+
+    // Porcentagem de pontos atrelados a cada cluster
+    for(int i = 0; i < k; i++)
+    {
+        float cont=0;
+
+        for(int j = 0; j < points; j++) 
+        {
+            if(i == closer_cluster[j])
+                cont++;
+        }
+        cout << "Cluster " << i + 1 << ": " << (cont/points)*100 << "%" << endl;
+    }
+}
+
 
 int main() 
 {
@@ -210,9 +238,8 @@ int main()
     // Executa o k-means, refinando as associações e centróides pelo número de iterações definido
     kmeans(closer_cluster, cluster_data, point_data, k, lines, max_iter);
     
-    // Exibe o resultado: qual ponto pertence a qual cluster
-    for (int i = 0; i < lines; i++) {
-        cout << "The point " << i + 1 << " is linked to cluster " << closer_cluster[i] << "." << endl;
-    }
+    // Exibe o resultado
+    show_results(closer_cluster, lines, k);
+
     return 0;
 }
